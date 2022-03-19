@@ -1,16 +1,46 @@
-### Hi there 👋
+# Nome das Ações: 
+nome: Jogo da Cobra
 
-<!--
-**cristianojao/cristianojao** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+# Controlador do tempo que sera feito a atualização dos arquivos.
+em:
+  horário:
+      # Será atualizado a cada 5 horas.
+    - cron: "0 */5 * * * * *
 
-Here are some ideas to get you started:
+# executar permite na lista de Ações (utilizado para testes de construção).
+  workflow_dispatch:
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+# Regras
+empregos:
+  construir:
+    em funcionamento: ubuntu-mais recente
+    passos:
+
+    # Verifica repo em $GITHUB_WORKSHOP, para que seu trabalho possa acessá-lo
+      - usos: ações/checkout@v2
+
+    # Repositorio que será utilizado para gerar os arquivos.
+      - usos: Platane/snk@master
+        id: snake-gif
+        com:
+          github_user_name: cristianojao #Seu usuario
+          gif_out_path: dist/github-contribution-grid-snake.gif
+          svg_out_path: dist/github-contribution-grid-snake.svg
+
+      - executar: status git
+
+      # Para as atualizações.
+      - nome: Alterações de pressão
+        usos: ad-m/github-push-action@master
+        com:
+          github_token: ${{ segredos. GITHUB_TOKEN }}
+          ramo: mestre
+          força: verdadeiro
+
+      - usos: crazy-max/ghaction-github-pages@v2.1.3
+        com:
+          # o ramo de saída que mencionamos acima
+          target_branch: saída
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ segredos. GITHUB_TOKEN }}
